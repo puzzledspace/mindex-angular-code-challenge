@@ -1,0 +1,26 @@
+.employee {
+  width: calc(100% - 4rem);
+  margin: 0 1rem;
+}
+
+.mat-header-row {
+  background-color: gray;
+}
+
+.mat-header-cell {
+  color: white;
+}
+
+.mat-column-employee {
+  flex-basis: 80%;
+  justify-content: left;
+}
+
+.mat-column-actions {
+  flex-basis: 20%;
+  justify-content: right;
+}
+
+.no-reports-table {
+  width: 100%;
+}

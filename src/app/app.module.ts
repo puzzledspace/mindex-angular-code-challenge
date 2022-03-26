@@ -15,6 +15,8 @@ import {MatInputModule} from '@angular/material/input';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
+import {MatTableModule} from '@angular/material/table';
+import {CdkColumnDef} from '@angular/cdk/table';
 
 @NgModule({
   declarations: [
@@ -39,9 +41,10 @@ import {MatButtonModule} from '@angular/material/button';
     MatInputModule,
     MatMenuModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTableModule
   ],
-  providers: [EmployeeService],
+  providers: [EmployeeService, CdkColumnDef],
   bootstrap: [AppComponent]
 })
 export class AppModule {
