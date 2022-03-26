@@ -1,17 +1,13 @@
 <mat-card class="employee">
-  <mat-card-header>
-    <mat-card-title>{{employee.lastName}}, {{employee.firstName}}</mat-card-title>
+  <mat-card-header class="employee-card-header">
+    <mat-card-title>{{employee.firstName}} {{employee.lastName}}, {{employee.position}}</mat-card-title>
     <mat-card-subtitle>Employee ID: {{employee.id}}, Direct Reports: {{totalCountOfDirectReports}}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <dl>
-      <dt>Job Title</dt>
-      <dd>{{employee.position}}</dd>
-    </dl>
     <!-- Show list of direct reports, if any, with actions -->
-    <mat-table [dataSource]="directReportEmployees" *ngIf="directReportEmployees && directReportEmployees.length > 0">
+    <mat-table class="direct-reports-table" [dataSource]="directReportEmployees" *ngIf="directReportEmployees && directReportEmployees.length > 0">
       <ng-container matColumnDef="employee">
-        <mat-header-cell *matHeaderCellDef>Direct Reports:</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>Direct Reports</mat-header-cell>
         <mat-cell *matCellDef="let directReportEmployee">{{directReportEmployee.firstName}}
           {{directReportEmployee.lastName}}, {{directReportEmployee.position}}</mat-cell>
       </ng-container>
@@ -27,18 +23,18 @@
         </mat-cell>
       </ng-container>
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      <mat-row class="direct-reports-row" *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
     <!-- Using a replacement "no data" table since we do not have `*matNoDataRow` with Angular Material 9 -->
-    <table class="mat-table cdk-table no-reports-table" *ngIf="directReportEmployees && directReportEmployees.length === 0">
+    <table class="mat-table cdk-table direct-reports-table no-reports-table" *ngIf="directReportEmployees && directReportEmployees.length === 0">
       <thead>
         <tr class="mat-header-row cdk-header-row">
-          <th class="mat-header-cell cdk-header-cell cdk-column-employee mat-column-employee">Direct Reports:</th>
+          <th class="mat-header-cell cdk-header-cell cdk-column-employee mat-column-employee">Direct Reports</th>
         </tr>
       </thead>
       <tbody>
         <tr class="mat-row cdk-row">
-          <td class="mat-cell cdk-cell cdk-column-employee mat-column-employee">This employee has no reports.</td>
+          <td class="mat-cell cdk-cell cdk-column-employee mat-column-employee no-reports-cell">This employee has no reports.</td>
         </tr>
       </tbody>
     </table>
