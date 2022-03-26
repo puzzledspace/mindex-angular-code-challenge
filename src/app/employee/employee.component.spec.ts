@@ -2,6 +2,7 @@ import {async, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
 
 import {EmployeeComponent} from './employee.component';
+import {EmployeeService} from '../employee.service';
 
 @Component({selector: 'app-mat-card', template: ''})
 class CardComponent {
@@ -35,6 +36,9 @@ describe('EmployeeComponent', () => {
         CardTitleComponent,
         CardSubtitleComponent,
         CardContentComponent
+      ],
+      providers: [
+        {provide: EmployeeService, useValue: employeeServiceSpy}
       ],
     }).compileComponents();
   }));
