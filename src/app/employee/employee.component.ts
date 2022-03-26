@@ -14,7 +14,7 @@ import {map, flatMap} from 'rxjs/operators';
 export class EmployeeComponent implements OnInit {
   @Input() employee: Employee;
   @Output() editDirectReportEvent = new EventEmitter<number>();
-  @Output() deleteDirectReportEvent = new EventEmitter<number>();
+  @Output() deleteDirectReportEvent = new EventEmitter<{directReportEmployeeId: number, employeeId: number}>();
 
   totalCountOfDirectReports: number;
   directReportEmployees: Employee[];
@@ -30,8 +30,8 @@ export class EmployeeComponent implements OnInit {
     this.editDirectReportEvent.emit(employeeId);
   }
 
-  deleteDirectReport(employeeId: number) {
-    this.deleteDirectReportEvent.emit(employeeId);
+  deleteDirectReport(directReportEmployeeId: number, employeeId: number) {
+    this.deleteDirectReportEvent.emit({directReportEmployeeId: directReportEmployeeId, employeeId: employeeId});
   }
 
   // fetch/process direct reports observers

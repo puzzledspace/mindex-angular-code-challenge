@@ -17,12 +17,15 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatTableModule} from '@angular/material/table';
 import {CdkColumnDef} from '@angular/cdk/table';
+import {DirectReportEditingDialogComponent} from './direct-report-editing-dialog/direct-report-editing-dialog.component';
+import {MatDialogModule, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
     AppComponent,
     EmployeeComponent,
-    EmployeeListComponent
+    EmployeeListComponent,
+    DirectReportEditingDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -42,10 +45,12 @@ import {CdkColumnDef} from '@angular/cdk/table';
     MatMenuModule,
     MatIconModule,
     MatButtonModule,
-    MatTableModule
+    MatTableModule,
+    MatDialogModule
   ],
-  providers: [EmployeeService, CdkColumnDef],
-  bootstrap: [AppComponent]
+  providers: [EmployeeService, CdkColumnDef, MatDialogModule, {provide: MAT_DIALOG_DATA, useValue: {}}, {provide: MatDialogRef, useValue: {}}],
+  bootstrap: [AppComponent],
+  entryComponents: [DirectReportEditingDialogComponent]
 })
 export class AppModule {
 }

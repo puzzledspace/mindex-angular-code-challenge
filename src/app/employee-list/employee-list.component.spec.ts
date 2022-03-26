@@ -1,5 +1,6 @@
 import {async, TestBed} from '@angular/core/testing';
 import {Component, Input} from '@angular/core';
+import {MatDialogModule} from '@angular/material/dialog';
 
 import {EmployeeListComponent} from './employee-list.component';
 import {EmployeeService} from '../employee.service';
@@ -27,6 +28,9 @@ describe('EmployeeListComponent', () => {
         EmployeeComponent,
         GridListComponent,
         GridTileComponent
+      ],
+      imports: [
+        MatDialogModule
       ],
       providers: [
         {provide: EmployeeService, useValue: employeeServiceSpy}
