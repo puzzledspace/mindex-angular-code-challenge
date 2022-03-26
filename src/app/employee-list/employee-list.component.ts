@@ -16,6 +16,14 @@ export class EmployeeListComponent implements OnInit {
   constructor(private employeeService: EmployeeService) {
   }
 
+  promptToEditDirectReport(employeeId: number) {
+    console.log(`Editing direct report: ${employeeId}`);
+  }
+
+  promptToDeleteDirectReport(employeeId: number) {
+    console.log(`Seeking confirmation before deleting direct report: ${employeeId}`);
+  }
+
   ngOnInit(): void {
     this.employeeService.getAll()
       .pipe(

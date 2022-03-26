@@ -1,0 +1,7 @@
+.employee-list {
+  margin-bottom: 2rem;
+}
+
+.employee-list:last-child {
+  margin-bottom: 1rem;
+}

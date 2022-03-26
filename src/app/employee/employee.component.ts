@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
 
 import {Employee} from '../employee';
 import {EmployeeService} from '../employee.service';
@@ -6,20 +6,35 @@ import {EmployeeService} from '../employee.service';
 import {forkJoin, of} from 'rxjs';
 import {map, flatMap} from 'rxjs/operators';
 
-
 @Component({
   selector: 'app-employee',
   templateUrl: './employee.component.html',
   styleUrls: ['./employee.component.css']
 })
 export class EmployeeComponent implements OnInit {
+  @Input() employee: Employee;
+  @Output() editDirectReportEvent = new EventEmitter<number>();
+  @Output() deleteDirectReportEvent = new EventEmitter<number>();
+
+  totalCountOfDirectReports: number;
+  directReportEmployees: Employee[];
+  displayedColumns: string[] = ['employee', 'actions'];
+
   constructor(private employeeService: EmployeeService) {
     this.totalCountOfDirectReports = 0;
+    this.directReportEmployees = [];
   }
 
-  @Input() employee: Employee;
-  totalCountOfDirectReports: number;
+  // direct report events
+  editDirectReport(employeeId: number) {
+    this.editDirectReportEvent.emit(employeeId);
+  }
 
+  deleteDirectReport(employeeId: number) {
+    this.deleteDirectReportEvent.emit(employeeId);
+  }
+
+  // fetch/process direct reports observers
   processDirectReports(employee: Employee) {
     return employee.directReports && employee.directReports.length > 0 ?
       forkJoin(
@@ -35,7 +50,15 @@ export class EmployeeComponent implements OnInit {
      );
   };
 
+  fetchDirectReports(directReportEmployeeIds: number[]) {
+    return directReportEmployeeIds && directReportEmployeeIds.length > 0 ?
+      forkJoin(directReportEmployeeIds.map(employeeId => this.employeeService.get(employeeId)))
+      : of([]);
+  }
+
   ngOnInit(): void {
     this.processDirectReports(this.employee).subscribe();
+    this.fetchDirectReports(this.employee.directReports).subscribe(directReports =>
+      this.directReportEmployees = directReports);
   }
 }

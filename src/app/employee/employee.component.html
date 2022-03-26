@@ -8,5 +8,39 @@
       <dt>Job Title</dt>
       <dd>{{employee.position}}</dd>
     </dl>
+    <!-- Show list of direct reports, if any, with actions -->
+    <mat-table [dataSource]="directReportEmployees" *ngIf="directReportEmployees && directReportEmployees.length > 0">
+      <ng-container matColumnDef="employee">
+        <mat-header-cell *matHeaderCellDef>Direct Reports:</mat-header-cell>
+        <mat-cell *matCellDef="let directReportEmployee">{{directReportEmployee.firstName}}
+          {{directReportEmployee.lastName}}, {{directReportEmployee.position}}</mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let directReportEmployee">
+          <button mat-icon-button (click)="editDirectReport(directReportEmployee.id)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="deleteDirectReport(directReportEmployee.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <!-- Using a replacement "no data" table since we do not have `*matNoDataRow` with Angular Material 9 -->
+    <table class="mat-table cdk-table no-reports-table" *ngIf="directReportEmployees && directReportEmployees.length === 0">
+      <thead>
+        <tr class="mat-header-row cdk-header-row">
+          <th class="mat-header-cell cdk-header-cell cdk-column-employee mat-column-employee">Direct Reports:</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="mat-row cdk-row">
+          <td class="mat-cell cdk-cell cdk-column-employee mat-column-employee">This employee has no reports.</td>
+        </tr>
+      </tbody>
+    </table>
   </mat-card-content>
 </mat-card>
