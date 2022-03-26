@@ -1,3 +1,3 @@
 <div class="employee-list" *ngFor="let emp of employees">
-  <app-employee [employee]="emp"></app-employee>
+  <app-employee (editDirectReportEvent)="promptToEditDirectReport($event)" (deleteDirectReportEvent)="promptToDeleteDirectReport($event)" [employee]="emp"></app-employee>
 </div>

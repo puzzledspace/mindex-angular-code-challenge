@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
 
 import {Employee} from '../employee';
 import {EmployeeService} from '../employee.service';
@@ -13,6 +13,9 @@ import {map, flatMap} from 'rxjs/operators';
 })
 export class EmployeeComponent implements OnInit {
   @Input() employee: Employee;
+  @Output() editDirectReportEvent = new EventEmitter<number>();
+  @Output() deleteDirectReportEvent = new EventEmitter<number>();
+
   totalCountOfDirectReports: number;
   directReportEmployees: Employee[];
   displayedColumns: string[] = ['employee', 'actions'];
@@ -22,8 +25,14 @@ export class EmployeeComponent implements OnInit {
     this.directReportEmployees = [];
   }
 
-  @Input() employee: Employee;
-  totalCountOfDirectReports: number;
+  // direct report events
+  editDirectReport(employeeId: number) {
+    this.editDirectReportEvent.emit(employeeId);
+  }
+
+  deleteDirectReport(employeeId: number) {
+    this.deleteDirectReportEvent.emit(employeeId);
+  }
 
   // fetch/process direct reports observers
   processDirectReports(employee: Employee) {
