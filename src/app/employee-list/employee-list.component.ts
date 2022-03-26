@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
+import { of } from 'rxjs';
 import {catchError, map, reduce} from 'rxjs/operators';
 
 import {Employee} from '../employee';
@@ -14,41 +15,59 @@ import {DirectReportEditingDialogComponent} from '../direct-report-editing-dialo
 export class EmployeeListComponent implements OnInit {
   employees: Employee[] = [];
   errorMessage: string;
+  employeeWithDirectReports: Employee;
 
   constructor(private employeeService: EmployeeService, private dialog: MatDialog) {
   }
 
+  getAllEmployees() {
+    return this.employeeService.getAll()
+      .pipe(
+        reduce((emps, e: Employee) => emps.concat(e), []),
+        map(emps => this.employees = emps),
+        catchError(this.handleError.bind(this))
+      );
+  }
+
+  deleteFromDirectReports(employee: Employee, employeeIdToDelete: number) {
+    const updatedListOfDirectReports = employee?.directReports.filter(directReport => directReport !== employeeIdToDelete);
+    return of({...employee, directReports: updatedListOfDirectReports});
+  }
+
   promptToEditDirectReport(employeeId: number) {
-    console.log(`Editing direct report: ${employeeId}`);
     const dialogRef = this.dialog.open(DirectReportEditingDialogComponent, {
       data: {action: 'edit', employeeId: employeeId}
     });
+
     dialogRef.afterClosed().subscribe(result => {
       if(result && result !== undefined) {
-        console.log(`Saving update to compensation for ${employeeId}: ${result}`);
+        // save the change to compensation for the employee
+        this.employeeService.get(employeeId).subscribe(employee =>
+          this.employeeService.save({...employee, compensation: result}).subscribe(e =>
+            this.getAllEmployees().subscribe()
+        ));
       }
     });
   }
 
   promptToDeleteDirectReport({directReportEmployeeId, employeeId}) {
-    console.log(`Seeking confirmation before deleting direct report: ${directReportEmployeeId} from ${employeeId}`);
     const dialogRef = this.dialog.open(DirectReportEditingDialogComponent, {
       data: {action: 'delete', directReportEmployeeId: directReportEmployeeId, employeeId: employeeId}
     });
+
     dialogRef.afterClosed().subscribe(result => {
       if(result && result !== undefined) {
-        console.log(`Deleting ${directReportEmployeeId} from list of direct reports for ${employeeId}`);
+        // delete the direct report from employee and update the employees list
+        this.employeeService.get(employeeId).subscribe(employee =>
+          this.deleteFromDirectReports(employee, directReportEmployeeId).subscribe(
+            employeeWithUpdatedDirectReports => this.employeeService.save(employeeWithUpdatedDirectReports).subscribe(e => this.getAllEmployees().subscribe())
+        ));
       }
     });
   }
 
   ngOnInit(): void {
-    this.employeeService.getAll()
-      .pipe(
-        reduce((emps, e: Employee) => emps.concat(e), []),
-        map(emps => this.employees = emps),
-        catchError(this.handleError.bind(this))
-      ).subscribe();
+    this.getAllEmployees().subscribe();
   }
 
   private handleError(e: Error | any): string {
